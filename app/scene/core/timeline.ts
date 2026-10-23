@@ -5,6 +5,10 @@ import type { Pose } from './types'
 /** Part de chaque section consacrée au séjour (la fin sert au voyage vers le chapitre suivant). */
 export const DWELL = 0.72
 
+export function isWithinSectionWindow(time: number, metric: { t0: number, t1: number } | undefined): boolean {
+  return metric !== undefined && time >= metric.t0 && time < metric.t1
+}
+
 /**
  * Timeline principale GSAP : un label par section réellement publiée, la caméra suit des poses clés par chapitre,
  * puis voyage vers le chapitre suivant. Les durées sont exprimées en pixels de défilement : temps = position de scroll.

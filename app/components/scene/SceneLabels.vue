@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-vue-next'
 import type { PublicContent } from '#shared/types'
 import type { SkillsChapter } from '~/scene/chapters/skills'
 import type { HomeChapter } from '~/scene/chapters/home-portal-about'
+import { isWithinSectionWindow } from '~/scene/core/timeline'
 import { yearOf } from '#shared/utils'
 
 const props = defineProps<{ content: PublicContent }>()
@@ -10,7 +11,13 @@ const { engine, ui, hover, status } = useScene()
 const open = useOpenItem()
 const tip = ref<HTMLElement | null>(null), panel = ref<HTMLElement | null>(null), marker = ref<HTMLElement | null>(null)
 useSceneAnchor(tip, () => engine.value?.hover?.world ?? null, null, { dy: -22 })
-useSceneAnchor(panel, () => { const ch = engine.value?.byId.get('skills') as SkillsChapter | undefined; return ch && ui.value.skillView === 'station' ? ch.moduleWorld : null }, 'skills', { dx: 56, dy: -70 })
+useSceneAnchor(panel, () => {
+  const current = engine.value
+  const ch = current?.byId.get('skills') as SkillsChapter | undefined
+  const time = current?.timeline?.time()
+  const metric = current?.metrics.get('skills')
+  return ch && time !== undefined && isWithinSectionWindow(time, metric) && ui.value.skillView === 'station' ? ch.moduleWorld : null
+}, 'skills', { dx: 56, dy: -70 })
 useSceneAnchor(marker, () => { const ch = engine.value?.byId.get('home') as HomeChapter | undefined; return ch?.earth?.hasMarker ? ch.earth.markerWorld : null }, 'home', { dy: -14 })
 
 const stationSkills = computed(() => props.content.skills.filter(s => s.allowedModes.includes('station') && (!ui.value.skillCategory || s.category === ui.value.skillCategory)))
