@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "noUncheckedIndexedAccess": false,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "composite": false,
+    "types": ["node"],
+    "paths": { "#shared/*": ["./shared/*"] }
+  },
+  "include": ["scripts/**/*.ts", "tests/**/*.ts", "vitest.config.ts", "drizzle.config.ts"]
+}
